@@ -1,18 +1,55 @@
-import Link from "next/link"
-import Image from "next/image"
-import type { Metadata } from "next"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { MapPin, ArrowLeft, Mail, Lock, Eye } from "lucide-react"
+"use client";
 
-export const metadata: Metadata = {
-  title: "Sign In | AutoFinder",
-  description: "Sign in to your AutoFinder account to find auto parts near you.",
-}
+import Link from "next/link";
+import Image from "next/image";
+// import type { Metadata } from "next"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { MapPin, ArrowLeft, Lock, Eye } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from 'next/navigation'; // Import useRouter for redirection
+
+//  Doesn't work with use-client annotation
+//export const metadata: Metadata = {
+//  title: "Sign In | AutoFinder",
+//  description: "Sign in to your AutoFinder account to find auto parts near you.",
+//}
 
 export default function SignInPage() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter(); // Initialize useRouter
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault(); // Avoids page restart
+
+    try {
+      const response = await fetch('http://localhost:8000/api/token/pair', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Login successful', data);
+        // router.push('/'); This should redirect and handle JWT tokens
+      } else {
+        setError(data.message || 'Error logging in');
+        console.error('Error logging in', data);
+      }
+    } catch (error) {
+      setError('Server connection error');
+      console.error('Connection error', error);
+    }
+  };
+  
   return (
     <div className="flex min-h-[100dvh] flex-col">
       <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -44,11 +81,19 @@ export default function SignInPage() {
               </div>
 
               <div className="grid gap-4">
+              <form onSubmit={handleSubmit} className="grid gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="username">Username</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input id="email" type="email" placeholder="you@example.com" className="pl-9" />
+                    <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        id="username" // Changed id to username
+                        type="text" // Changed type to text as usernames can contain letters, numbers, etc...
+                        placeholder="Your username"
+                        className="pl-9"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                      />
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -60,15 +105,19 @@ export default function SignInPage() {
                   </div>
                   <div className="relative">
                     <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input id="password" type="password" className="pl-9" />
+                    <Input
+                      id="password"
+                      type="password"
+                      className="pl-9"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
                     <Button variant="ghost" size="icon" className="absolute right-0 top-0 h-9 w-9">
                       <Eye className="h-4 w-4" />
                       <span className="sr-only">Toggle password visibility</span>
                     </Button>
                   </div>
                 </div>
-              </div>
-
               <div className="flex items-center space-x-2">
                 <Checkbox id="remember" />
                 <Label htmlFor="remember" className="text-sm font-normal">
@@ -76,7 +125,11 @@ export default function SignInPage() {
                 </Label>
               </div>
 
-              <Button className="w-full">Sign In</Button>
+              <Button type="submit" className="w-full">Sign In</Button> {/* Cambia el tipo a submit */}
+            </form>
+
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+              
 
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
@@ -86,7 +139,7 @@ export default function SignInPage() {
                   <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
                 </div>
               </div>
-
+            </div>
               <div className="grid grid-cols-2 gap-4">
                 <Button variant="outline" className="w-full">
                   <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
