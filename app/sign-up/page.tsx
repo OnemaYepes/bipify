@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { MapPin, ArrowLeft, User, Building2, Car, Mail, Lock, Eye } from "lucide-react"
+import { MapPin, ArrowLeft, User, Building2, Car, Mail, Lock, Eye, PersonStanding } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Sign Up | Bipify",
@@ -21,9 +21,9 @@ export default function SignUpPage() {
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-xl">
             <MapPin className="h-8 w-8 text-primary" />
-              <Link href="/">
-                <span className="text-primary">Bipify</span>
-              </Link>
+            <Link href="/">
+              <span className="text-primary">Bipify</span>
+            </Link>
           </div>
         </div>
       </header>
@@ -59,43 +59,65 @@ export default function SignUpPage() {
                   </TabsTrigger>
                 </TabsList>
 
+                {/* Personal form */}
                 <TabsContent value="personal" className="space-y-6">
-                  <div className="grid gap-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="first-name">First name</Label>
-                        <Input id="first-name" placeholder="John" />
+                  <form className="space-y-6">
+                    <div className="grid gap-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="first-name">First name</Label>
+                          <Input id="first-name" name="firstName" placeholder="John" required />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="last-name">Last name</Label>
+                          <Input id="last-name" name="lastName" placeholder="Doe" required />
+                        </div>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="last-name">Last name</Label>
-                        <Input id="last-name" placeholder="Doe" />
+                        <Label htmlFor="personal-email">Email</Label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            id="personal-email"
+                            name="email"
+                            type="email"
+                            placeholder="you@example.com"
+                            className="pl-9"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="username">Username</Label>
+                        <div className="relative">
+                          <PersonStanding className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            id="username"
+                            name="username"
+                            type="text"
+                            placeholder="JohnDoe123"
+                            className="pl-9"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="personal-password">Password</Label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            id="personal-password"
+                            name="password"
+                            type="password"
+                            className="pl-9"
+                            required
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input id="email" type="email" placeholder="you@example.com" className="pl-9" />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="password">Password</Label>
-                      </div>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input id="password" type="password" className="pl-9" />
-                        <Button variant="ghost" size="icon" className="absolute right-0 top-0 h-9 w-9">
-                          <Eye className="h-4 w-4" />
-                          <span className="sr-only">Toggle password visibility</span>
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div className="space-y-4">
                     <div className="flex items-center space-x-2">
-                      <Checkbox id="terms" />
+                      <Checkbox id="terms" name="terms" required />
                       <Label htmlFor="terms" className="text-sm font-normal">
                         I agree to the{" "}
                         <Link href="#" className="text-primary hover:underline">
@@ -107,51 +129,72 @@ export default function SignUpPage() {
                         </Link>
                       </Label>
                     </div>
-                  </div>
 
-                  <Button className="w-full">Create Account</Button>
+                    <Button type="submit" className="w-full">
+                      Create Account
+                    </Button>
 
-                  <div className="text-center text-sm">
-                    Already have an account?{" "}
-                    <Link href="/sign-in" className="text-primary hover:underline">
-                      Sign in
-                    </Link>
-                  </div>
+                    <div className="text-center text-sm">
+                      Already have an account?{" "}
+                      <Link href="/sign-in" className="text-primary hover:underline">
+                        Sign in
+                      </Link>
+                    </div>
+                  </form>
                 </TabsContent>
 
+                {/* Business form */}
                 <TabsContent value="business" className="space-y-6">
-                  <div className="grid gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="business-name">Business name</Label>
-                      <Input id="business-name" placeholder="Auto Parts Shop" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="business-nit">NIT</Label>
-                      <Input id="business-nit" placeholder="NIT code" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="business-email">Business email</Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input id="business-email" type="email" placeholder="business@example.com" className="pl-9" />
+                  <form className="space-y-6">
+                    <div className="grid gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="business-name">Business name</Label>
+                        <Input id="business-name" name="businessName" placeholder="Auto Parts Shop" required />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="business-nit">NIT</Label>
+                        <Input id="business-nit" name="nit" placeholder="NIT code" required />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="business-email">Business email</Label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            id="business-email"
+                            name="businessEmail"
+                            type="email"
+                            placeholder="business@example.com"
+                            className="pl-9"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="business-password">Password</Label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            id="business-password"
+                            name="businessPassword"
+                            type="password"
+                            className="pl-9"
+                            required
+                          />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            type="button"
+                            className="absolute right-0 top-0 h-9 w-9"
+                          >
+                            <Eye className="h-4 w-4" />
+                            <span className="sr-only">Toggle password visibility</span>
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="business-password">Password</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input id="business-password" type="password" className="pl-9" />
-                        <Button variant="ghost" size="icon" className="absolute right-0 top-0 h-9 w-9">
-                          <Eye className="h-4 w-4" />
-                          <span className="sr-only">Toggle password visibility</span>
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div className="space-y-4">
                     <div className="flex items-center space-x-2">
-                      <Checkbox id="business-terms" />
+                      <Checkbox id="business-terms" name="businessTerms" required />
                       <Label htmlFor="business-terms" className="text-sm font-normal">
                         I agree to the{" "}
                         <Link href="#" className="text-primary hover:underline">
@@ -163,22 +206,25 @@ export default function SignUpPage() {
                         </Link>
                       </Label>
                     </div>
-                  </div>
 
-                  <Button className="w-full">Create Business Account</Button>
+                    <Button type="submit" className="w-full">
+                      Create Business Account
+                    </Button>
 
-                  <div className="text-center text-sm">
-                    Already have an account?{" "}
-                    <Link href="/sign-in" className="text-primary hover:underline">
-                      Sign in
-                    </Link>
-                  </div>
+                    <div className="text-center text-sm">
+                      Already have an account?{" "}
+                      <Link href="/sign-in" className="text-primary hover:underline">
+                        Sign in
+                      </Link>
+                    </div>
+                  </form>
                 </TabsContent>
               </Tabs>
             </div>
 
             {/* Right side - Image and benefits */}
             <div className="hidden md:flex flex-col justify-between rounded-lg border bg-muted p-8">
+              {/* (Beneficios - sin cambios) */}
               <div className="space-y-6">
                 <div className="flex items-center gap-2 font-bold text-xl">
                   <MapPin className="h-6 w-6 text-primary" />
@@ -190,6 +236,7 @@ export default function SignUpPage() {
                     Join thousands of users who find auto parts near them with our interactive map and marketplace.
                   </p>
                 </div>
+                {/* Right side - Image and benefits */}
                 <div className="space-y-4">
                   <div className="flex items-start gap-2">
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
@@ -265,10 +312,10 @@ export default function SignUpPage() {
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
+
       </main>
 
       <footer className="border-t py-4">
