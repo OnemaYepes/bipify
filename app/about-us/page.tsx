@@ -6,23 +6,21 @@ import Link from "next/link";
 export default function AboutUs() {
   return (
     <div className="flex min-h-[100dvh] flex-col">
-      {/* Header - Menú igual al de LandingPage */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="px-4 md:px-6 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-xl">
             <MapPin className="h-8 w-8 text-primary" />
-            <span className="text-primary">Bipify</span>
+            <Link href="/">
+                <span className="text-primary">Bipify</span>
+              </Link>
           </div>
 
           <nav className="hidden md:flex gap-6">
-            <Link href="#" className="text-sm font-medium hover:text-primary">
+            <Link href="/find-parts" className="text-sm font-medium hover:text-primary">
               Find Parts
             </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary">
+            <Link href="/sell" className="text-sm font-medium hover:text-primary">
               Sell Parts
-            </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary">
-              How It Works
             </Link>
             <Link href="/about-us" className="text-sm font-medium hover:text-primary">
               About Us
@@ -30,10 +28,12 @@ export default function AboutUs() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <Link href="#" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">
+            <Link href="/sign-in" className="hidden md:block text-sm font-medium hover:text-primary">
               Sign In
             </Link>
-            <Button className="hidden md:inline-flex text-sm px-5 py-2">Get Started</Button>
+            <Button className="hidden md:inline-flex" asChild>
+              <Link href="/sign-up">Get Started</Link>
+            </Button>
             <Button variant="ghost" size="icon" className="md:hidden">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Toggle menu</span>
@@ -90,13 +90,15 @@ export default function AboutUs() {
                   <Link href="/">
                     <Button variant="outline" className="px-6 py-2 text-sm">Back to Home</Button>
                   </Link>
-                  <Button size="lg" className="text-sm px-6 py-2.5">Get Started</Button>
+                  <Button className="text-sm px-6 py-2.5" asChild>
+                    <Link href="/sign-up">Get Started</Link>
+                  </Button>
                 </div>
               </div>
 
               <div className="relative">
                 <Image
-                  src="/about-us-mechanics.jpg"
+                  src="/images/HeaderMap.png"
                   width={600}
                   height={400}
                   alt="Mechanics using Bipify"
@@ -131,9 +133,22 @@ export default function AboutUs() {
       </main>
 
       {/* Footer - sin cambios, como en LandingPage */}
-      <footer className="w-full border-t bg-background py-8 md:py-12">
-        <div className="container px-4 md:px-6">
-          {/* Aquí puedes poner tu footer si ya lo tienes en otro archivo */}
+      <footer className="border-t py-4">
+        <div className="container flex flex-col items-center justify-between gap-4 md:flex-row px-4 md:px-6">
+          <p className="text-center text-sm text-muted-foreground">
+            &copy; {new Date().getFullYear()} Bipify. All rights reserved.
+          </p>
+          <nav className="flex gap-4">
+            <Link href="#" className="text-sm text-muted-foreground hover:underline">
+              Terms
+            </Link>
+            <Link href="#" className="text-sm text-muted-foreground hover:underline">
+              Privacy
+            </Link>
+            <Link href="#" className="text-sm text-muted-foreground hover:underline">
+              Contact
+            </Link>
+          </nav>
         </div>
       </footer>
     </div>

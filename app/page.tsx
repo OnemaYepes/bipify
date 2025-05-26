@@ -18,8 +18,8 @@ import {
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-[100dvh] flex-col">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="flex min-h-[100dvh] flex-col ">
+      <header className="px-4 md:px-6 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-xl">
             <MapPin className="h-8 w-8 text-primary" />
@@ -27,14 +27,11 @@ export default function LandingPage() {
           </div>
 
           <nav className="hidden md:flex gap-6">
-            <Link href="#" className="text-sm font-medium hover:text-primary">
+            <Link href="/find-parts" className="text-sm font-medium hover:text-primary">
               Find Parts
             </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary">
+            <Link href="/sell" className="text-sm font-medium hover:text-primary">
               Sell Parts
-            </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary">
-              How It Works
             </Link>
             <Link href="/about-us" className="text-sm font-medium hover:text-primary">
               About Us
@@ -45,7 +42,9 @@ export default function LandingPage() {
             <Link href="/sign-in" className="hidden md:block text-sm font-medium hover:text-primary">
               Sign In
             </Link>
-            <Button className="hidden md:inline-flex">Get Started</Button>
+            <Button className="hidden md:inline-flex" asChild>
+              <Link href="/sign-up">Get Started</Link>
+            </Button>
             <Button variant="ghost" size="icon" className="md:hidden">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Toggle menu</span>
@@ -56,7 +55,7 @@ export default function LandingPage() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-background to-muted">
+        <section className="w-full py-10 md:py-20 lg:py-32 xl:py-40 bg-gradient-to-b from-background to-muted">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_600px] lg:gap-12 xl:grid-cols-[1fr_700px]">
               <div className="flex flex-col justify-center space-y-4">
@@ -97,7 +96,7 @@ export default function LandingPage() {
               </div>
               <div className="relative hidden lg:block">
                 <Image
-                  src="/placeholder.svg?height=550&width=700"
+                  src="/images/HeaderMap.png?height=550&width=700"
                   width={700}
                   height={550}
                   alt="Map interface showing auto parts locations"
@@ -114,7 +113,7 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">How AutoFinder Works</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">How Bipify Works</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Find the right parts at the right price, all in your neighborhood.
                 </p>
@@ -195,7 +194,7 @@ export default function LandingPage() {
               </div>
               <div className="relative lg:order-last">
                 <Image
-                  src="/placeholder.svg?height=500&width=600"
+                  src="/images/LandingMap.png?height=500&width=600"
                   width={600}
                   height={500}
                   alt="Interactive map interface"
@@ -372,7 +371,7 @@ export default function LandingPage() {
                   Ready to Find Your Parts?
                 </h2>
                 <p className="mx-auto max-w-[700px] md:text-xl">
-                  Join thousands of drivers who find the right parts at the right price with AutoFinder.
+                  Join thousands of drivers who find the right parts at the right price with Bipify.
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -381,7 +380,7 @@ export default function LandingPage() {
                   variant="outline"
                   className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
                 >
-                  Sign Up Free
+                  <Link href="/sign-up">Sign Up for Free</Link>
                 </Button>
               </div>
             </div>
@@ -395,7 +394,7 @@ export default function LandingPage() {
             <div className="space-y-4">
               <div className="flex items-center gap-2 font-bold text-xl">
                 <MapPin className="h-6 w-6 text-primary" />
-                <span>AutoFinder</span>
+                <span>Bipify</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 Find auto parts near you with our interactive map and marketplace.
@@ -452,7 +451,7 @@ export default function LandingPage() {
           </div>
           <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} AutoFinder. All rights reserved.
+              © {new Date().getFullYear()} Bipify. All rights reserved.
             </p>
             <div className="flex gap-4">
               <Link href="#" className="text-muted-foreground hover:text-foreground">
