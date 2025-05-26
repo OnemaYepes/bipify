@@ -17,6 +17,8 @@ import { useRouter } from 'next/navigation'; // Import useRouter for redirection
 //  description: "Sign in to your AutoFinder account to find auto parts near you.",
 //}
 
+const LOGIN_URL = '/api/login/'
+
 export default function SignInPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -27,7 +29,7 @@ export default function SignInPage() {
     event.preventDefault(); // Avoids page restart
 
     try {
-      const response = await fetch('http://localhost:8000/api/token/pair', {
+      const response = await fetch(LOGIN_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,15 +40,12 @@ export default function SignInPage() {
       const data = await response.json();
 
       if (response.ok) {
-        console.log('Login successful', data);
-        // router.push('/'); This should redirect and handle JWT tokens
+        router.replace('/')
       } else {
         setError(data.message || 'Error logging in');
-        console.error('Error logging in', data);
       }
     } catch (error) {
       setError('Server connection error');
-      console.error('Connection error', error);
     }
   };
   
