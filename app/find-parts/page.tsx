@@ -1,12 +1,14 @@
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import { Slider } from "@/components/ui/slider"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import {
   MapPin,
   Search,
@@ -22,131 +24,21 @@ import {
   ShoppingCart,
   Heart,
   ArrowUpDown,
-} from "lucide-react"
-import { cn } from "@/lib/utils"
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import useSWR from "swr";
+
+const PRODUCTS_API_URL = "/api/products";
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function PartsPage() {
-  // Sample data for auto parts
-  const parts = [
-    {
-      id: 1,
-      name: "Premium Ceramic Brake Pads",
-      category: "Brakes",
-      price: 49.99,
-      originalPrice: 69.99,
-      rating: 4.8,
-      reviews: 124,
-      distance: 0.8,
-      inStock: true,
-      image: "/images/brakepad.png?height=200&width=200",
-      brand: "StopTech",
-      compatibility: ["Toyota Camry", "Honda Accord", "Nissan Altima"],
-    },
-    {
-      id: 2,
-      name: "High-Performance Air Filter",
-      category: "Air Intake",
-      price: 29.99,
-      originalPrice: 39.99,
-      rating: 4.5,
-      reviews: 86,
-      distance: 1.2,
-      inStock: true,
-      image: "/images/AirFilter.png?height=200&width=200",
-      brand: "K&N",
-      compatibility: ["Ford F-150", "Chevrolet Silverado", "RAM 1500"],
-    },
-    {
-      id: 3,
-      name: "Synthetic Motor Oil 5W-30",
-      category: "Fluids",
-      price: 32.99,
-      originalPrice: 42.99,
-      rating: 4.9,
-      reviews: 210,
-      distance: 0.5,
-      inStock: true,
-      image: "/images/SyntheticMotor.png?height=200&width=200",
-      brand: "Mobil 1",
-      compatibility: ["All Vehicles"],
-    },
-    {
-      id: 4,
-      name: "Alternator - Remanufactured",
-      category: "Electrical",
-      price: 129.99,
-      originalPrice: 169.99,
-      rating: 4.3,
-      reviews: 58,
-      distance: 2.1,
-      inStock: true,
-      image: "/images/Alternator.png?height=200&width=200",
-      brand: "Bosch",
-      compatibility: ["Honda Civic", "Toyota Corolla", "Nissan Sentra"],
-    },
-    {
-      id: 5,
-      name: "Spark Plugs - Iridium",
-      category: "Ignition",
-      price: 8.99,
-      originalPrice: 12.99,
-      rating: 4.7,
-      reviews: 143,
-      distance: 1.5,
-      inStock: false,
-      image: "/images/SparkPlug.png?height=200&width=200",
-      brand: "Bosch",
-      compatibility: ["Ford Mustang", "Chevrolet Camaro", "Dodge Challenger"],
-    },
-    {
-      id: 6,
-      name: "Shock Absorber - Front",
-      category: "Suspension",
-      price: 89.99,
-      originalPrice: 109.99,
-      rating: 4.6,
-      reviews: 72,
-      distance: 3.2,
-      inStock: true,
-      image: "/images/ShockAbs.png?height=200&width=200",
-      brand: "Monroe",
-      compatibility: ["Subaru Outback", "Toyota RAV4", "Honda CR-V"],
-    },
-    {
-      id: 7,
-      name: "Oxygen Sensor",
-      category: "Sensors",
-      price: 59.99,
-      originalPrice: 79.99,
-      rating: 4.4,
-      reviews: 91,
-      distance: 1.8,
-      inStock: true,
-      image: "/images/O2.png?height=200&width=200",
-      brand: "Denso",
-      compatibility: ["Mazda 3", "Hyundai Elantra", "Kia Forte"],
-    },
-    {
-      id: 8,
-      name: "Radiator - Aluminum",
-      category: "Cooling",
-      price: 119.99,
-      originalPrice: 149.99,
-      rating: 4.5,
-      reviews: 67,
-      distance: 2.5,
-      inStock: true,
-      image: "/images/Radiator.png?height=200&width=200",
-      brand: "Mishimoto",
-      compatibility: ["Jeep Wrangler", "Ford Bronco", "Toyota 4Runner"],
-    },
-  ]
+  const { data, error, isLoading } = useSWR(PRODUCTS_API_URL, fetcher);
 
-  // Sample categories for filters
-  const categories = ["Brakes", "Air Intake", "Fluids", "Electrical", "Ignition", "Suspension", "Sensors", "Cooling"]
+  if (error) return <div>Failed to load products: {error.message}</div>; // Muestra el mensaje de error
+  if (isLoading) return <div>Loading products...</div>;
 
-  // Sample brands for filters
-  const brands = ["StopTech", "K&N", "Mobil 1", "Bosch", "NGK", "Monroe", "Denso", "Mishimoto"]
+  const products = Object.values(data);
 
   return (
     <div className="flex min-h-[100dvh] flex-col">
@@ -155,8 +47,8 @@ export default function PartsPage() {
           <div className="flex items-center gap-2 font-bold text-xl">
             <MapPin className="h-8 w-8 text-primary" />
             <Link href="/">
-                <span className="text-primary">Bipify</span>
-              </Link>
+              <span className="text-primary">Bipify</span>
+            </Link>
           </div>
 
           <nav className="hidden md:flex gap-6">
@@ -248,41 +140,6 @@ export default function PartsPage() {
                   </Button>
                 </div>
 
-                {/* Category Filter */}
-                <div className="mb-6">
-                  <h3 className="font-medium mb-2 flex items-center justify-between">
-                    Categories
-                    <ChevronDown className="h-4 w-4" />
-                  </h3>
-                  <div className="space-y-2">
-                    {categories.map((category) => (
-                      <div key={category} className="flex items-center space-x-2">
-                        <Checkbox id={`category-${category}`} />
-                        <Label htmlFor={`category-${category}`} className="text-sm font-normal">
-                          {category}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Brand Filter */}
-                <div className="mb-6">
-                  <h3 className="font-medium mb-2 flex items-center justify-between">
-                    Brands
-                    <ChevronDown className="h-4 w-4" />
-                  </h3>
-                  <div className="space-y-2">
-                    {brands.map((brand) => (
-                      <div key={brand} className="flex items-center space-x-2">
-                        <Checkbox id={`brand-${brand}`} />
-                        <Label htmlFor={`brand-${brand}`} className="text-sm font-normal">
-                          {brand}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
 
                 {/* Price Range Filter */}
                 <div className="mb-6">
@@ -361,7 +218,10 @@ export default function PartsPage() {
                   <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                     <div>
                       <h1 className="text-2xl font-bold">Auto Parts</h1>
-                      <p className="text-muted-foreground">Showing 8 results for "2023 Toyota Camry LE"</p>
+                      {/* Mostrar el número de resultados dinámicamente */}
+                      <p className="text-muted-foreground">
+                        Showing {products.length} results for "2023 Toyota Camry LE"
+                      </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-muted-foreground">Sort by:</span>
@@ -375,33 +235,18 @@ export default function PartsPage() {
                     </div>
                   </div>
 
-                  {/* Active Filters */}
-                  <div className="mb-4 flex flex-wrap gap-2">
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      Category: Brakes
-                      <X className="h-3 w-3 cursor-pointer" />
-                    </Badge>
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      In Stock Only
-                      <X className="h-3 w-3 cursor-pointer" />
-                    </Badge>
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      Within 5 miles
-                      <X className="h-3 w-3 cursor-pointer" />
-                    </Badge>
-                  </div>
-
                   {/* Parts Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {parts.map((part) => (
+                    {products.map((product) => (
                       <div
-                        key={part.id}
+                        key={product.id || product.name} // Usar id si existe, de lo contrario name (para keys únicas)
                         className="group relative rounded-lg border bg-card overflow-hidden transition-all hover:shadow-md"
                       >
                         <div className="aspect-square relative overflow-hidden bg-muted">
+                          {/* Placeholder image */}
                           <Image
-                            src={part.image || "/placeholder.svg"}
-                            alt={part.name}
+                            src="../placeholder.svg"
+                            alt={product.name || "Auto Part"} // Usa el nombre del producto o un default
                             fill
                             className="object-contain p-4 transition-transform group-hover:scale-105"
                           />
@@ -415,48 +260,31 @@ export default function PartsPage() {
                           </Button>
                         </div>
                         <div className="p-4">
-                          <div className="mb-2 flex items-center justify-between">
-                            <Badge variant="outline">{part.category}</Badge>
-                            <div className="flex items-center gap-1 text-sm">
-                              <MapPin className="h-3 w-3 text-primary" />
-                              <span>{part.distance} miles</span>
-                            </div>
-                          </div>
                           <h3 className="font-medium line-clamp-2 mb-1 group-hover:text-primary">
-                            <Link href={`/find-parts/${part.id}`}>{part.name}</Link>
+                            <Link href={`/find-parts/${product.id}`}>{product.name}</Link>
                           </h3>
-                          <p className="text-sm text-muted-foreground mb-2">{part.brand}</p>
                           <div className="flex items-center gap-1 mb-3">
                             <div className="flex">
+                              {/* Rating: Usar un valor por defecto si no existe */}
                               {[...Array(5)].map((_, i) => (
                                 <Star
                                   key={i}
                                   className={cn(
                                     "h-3 w-3",
-                                    i < Math.floor(part.rating) ? "fill-primary text-primary" : "text-muted-foreground",
+                                    i < Math.floor(product.rating || 0) ? "fill-primary text-primary" : "text-muted-foreground"
                                   )}
                                 />
                               ))}
                             </div>
-                            <span className="text-xs text-muted-foreground">({part.reviews})</span>
+                            {/* Reviews: Usar un valor por defecto si no existe */}
+                            <span className="text-xs text-muted-foreground">({product.reviews || 0})</span>
                           </div>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <span className="font-bold text-lg">${part.price.toFixed(2)}</span>
-                              {part.originalPrice > part.price && (
-                                <span className="text-sm text-muted-foreground line-through">
-                                  ${part.originalPrice.toFixed(2)}
-                                </span>
-                              )}
+                              {/* Precio: Asegurarse de que sea un número y formatearlo */}
+                              <span className="font-bold text-lg">${(product.price || 0).toFixed(2)}</span>
                             </div>
                             <div className="flex items-center gap-1">
-                              <span
-                                className={cn(
-                                  "inline-flex h-2 w-2 rounded-full",
-                                  part.inStock ? "bg-green-500" : "bg-red-500",
-                                )}
-                              ></span>
-                              <span className="text-xs font-medium">{part.inStock ? "In Stock" : "Out of Stock"}</span>
                             </div>
                           </div>
                           <Button className="w-full mt-3">
@@ -583,5 +411,5 @@ export default function PartsPage() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
