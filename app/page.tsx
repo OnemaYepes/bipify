@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -15,6 +17,21 @@ import {
   Menu,
   ChevronRight,
 } from "lucide-react"
+import dynamic from 'next/dynamic';
+
+const WorkshopMap = dynamic(() => import('./map/page'), {
+  ssr: false
+});
+
+function App() {
+  return (
+    <div className="App">
+      <WorkshopMap />
+    </div>
+  );
+}
+
+const MAP_URL = "/api/map";
 
 export default function LandingPage() {
   return (
@@ -54,7 +71,9 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-1">
-        {/* Hero Section */}
+        <div className="relative" style={{ height: 'calc(100vh - 64px)' }}>
+          <App />
+        </div>
         <section className="w-full py-10 md:py-20 lg:py-32 xl:py-40 bg-gradient-to-b from-background to-muted">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_600px] lg:gap-12 xl:grid-cols-[1fr_700px]">
