@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, ChangeEvent } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -32,12 +32,15 @@ import {
   Truck,
   ShoppingCart,
   Star,
+  Plus, // This is the correct import from lucide-react
+  User, // This is the correct import from lucide-react
 } from "lucide-react"
 
 export default function SellPartPage() {
   const [step, setStep] = useState(1)
-  const [images, setImages] = useState<string[]>(["/images/SyntheticMotor.png?height=200&width=200"])
+  const [images, setImages] = useState<string[]>([])
   const [previewMode, setPreviewMode] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const totalSteps = 5
 
@@ -61,8 +64,27 @@ export default function SellPartPage() {
   }
 
   const addImage = () => {
-    if (images.length < 5) {
-      setImages([...images, "/images/SyntheticMotor.png?height=200&width=200"])
+    if (images.length < 5 && fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
+  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (files && files.length > 0) {
+      const file = files[0]
+      if (file.type.startsWith("image/") && images.length < 5) {
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          setImages((prevImages) => [...prevImages, reader.result as string])
+        }
+        reader.readAsDataURL(file)
+      } else if (!file.type.startsWith("image/")) {
+        alert("Please upload an image file (e.g., JPG, PNG, GIF).")
+      } else if (images.length >= 5) {
+        alert("You can only upload a maximum of 5 images.")
+      }
+      event.target.value = '';
     }
   }
 
@@ -153,7 +175,7 @@ export default function SellPartPage() {
                             ? "Details"
                             : i === 3
                               ? "Compatibility"
-                              : i === 4
+                            : i === 4
                                 ? "Pricing"
                                 : "Location"}
                       </span>
@@ -182,7 +204,7 @@ export default function SellPartPage() {
                         {images.map((image, index) => (
                           <div key={index} className="relative aspect-square rounded-lg border bg-muted">
                             <Image
-                              src={image || "/images/SyntheticMotor.png"}
+                              src={image}
                               alt={`Part image ${index + 1}`}
                               fill
                               className="object-cover rounded-lg"
@@ -200,13 +222,22 @@ export default function SellPartPage() {
                           </div>
                         ))}
                         {images.length < 5 && (
-                          <button
-                            onClick={addImage}
-                            className="aspect-square rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-2 hover:bg-muted/50 transition-colors"
-                          >
-                            <Upload className="h-8 w-8 text-muted-foreground" />
-                            <span className="text-sm font-medium">Add Photo</span>
-                          </button>
+                          <>
+                            <input
+                              type="file"
+                              ref={fileInputRef}
+                              onChange={handleImageUpload}
+                              accept="image/*"
+                              className="hidden"
+                            />
+                            <button
+                              onClick={addImage}
+                              className="aspect-square rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-2 hover:bg-muted/50 transition-colors"
+                            >
+                              <Upload className="h-8 w-8 text-muted-foreground" />
+                              <span className="text-sm font-medium">Add Photo</span>
+                            </button>
+                          </>
                         )}
                       </div>
 
@@ -890,7 +921,6 @@ export default function SellPartPage() {
   )
 }
 
-// Preview Listing Component
 function PreviewListing({ onBack, images }: { onBack: () => void; images: string[] }) {
   return (
     <div className="max-w-4xl mx-auto">
@@ -1072,47 +1102,5 @@ function PreviewListing({ onBack, images }: { onBack: () => void; images: string
         </Button>
       </div>
     </div>
-  )
-}
-
-// Plus icon component
-function Plus({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <line x1="12" y1="5" x2="12" y2="19"></line>
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-    </svg>
-  )
-}
-
-// User icon component
-function User({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-      <circle cx="12" cy="7" r="4"></circle>
-    </svg>
   )
 }

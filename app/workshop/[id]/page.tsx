@@ -22,6 +22,12 @@ import {
   MessageCircle,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import useSWR from "swr";
+
+const WORKSHOP_API_URL = '/api/workshops';
+const PRODUCTS_API_URL = "/api/products";
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function BusinessPage({ params }: { params: { id: string } }) {
   // Unwrap the params promise
@@ -29,11 +35,16 @@ export default function BusinessPage({ params }: { params: { id: string } }) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [selectedCategory, setSelectedCategory] = useState("all")
 
+  const { data, error, isLoading } = useSWR(WORKSHOP_API_URL, fetcher);
+
+  if (error) return <div>Failed to load workshop: {error.message}</div>;
+  if (isLoading) return <div>Loading workshop and products...</div>;
+
   // Sample business data
   const business = {
-    id: Number.parseInt(unwrappedParams.id), // Fixed line
-    name: "AutoZone",
-    address: "123 Main Street, Anytown, CA 90210",
+    id: data.id, // Fixed line
+    name: data.name,
+    address: data.address,
     email: "store123@autozone.com",
     logo: "/images/autozone.png?height=100&width=100",
   }
