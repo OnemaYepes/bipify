@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { redirect } from "next/navigation";
 import {
   Search,
@@ -16,26 +16,13 @@ import {
   CreditCard,
   Menu,
   ChevronRight,
-} from "lucide-react"
-import dynamic from 'next/dynamic';
-
-const WorkshopMap = dynamic(() => import('./map/page'), {
-  ssr: false
-});
-
-function App() {
-  return (
-    <div className="App">
-      <WorkshopMap />
-    </div>
-  );
-}
-
-const MAP_URL = "/api/map";
+} from "lucide-react";
+import dynamic from "next/dynamic";
+import MapComponent from "@/components/MapComponent";
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-[100dvh] flex-col ">
+    <div className="flex min-h-[100dvh] flex-col">
       <header className="px-4 md:px-6 sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-xl">
@@ -71,9 +58,6 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-1">
-        <div className="relative" style={{ height: 'calc(100vh - 64px)' }}>
-          <App />
-        </div>
         <section className="w-full py-10 md:py-20 lg:py-32 xl:py-40 bg-gradient-to-b from-background to-muted">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_600px] lg:gap-12 xl:grid-cols-[1fr_700px]">
@@ -87,6 +71,7 @@ export default function LandingPage() {
                     Find what you need, where you need it.
                   </p>
                 </div>
+                                
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <div className="relative w-full max-w-sm">
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -97,6 +82,7 @@ export default function LandingPage() {
                     />
                     <Button className="absolute right-0 top-0 h-9 rounded-l-none">Search</Button>
                   </div>
+                  
                 </div>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
@@ -114,14 +100,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="relative hidden lg:block">
-                <Image
-                  src="/images/HeaderMap.png?height=550&width=700"
-                  width={700}
-                  height={550}
-                  alt="Map interface showing auto parts locations"
-                  className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
-                />
-                <div className="absolute inset-0 rounded-xl border border-foreground/10 shadow-xl"></div>
+                <MapComponent />
               </div>
             </div>
           </div>
