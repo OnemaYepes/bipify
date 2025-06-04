@@ -39,6 +39,7 @@ export default function PartsPage() {
   if (isLoading) return <div>Loading products...</div>;
 
   const products = Object.values(data);
+  console.log(products[1].photo)
 
   return (
     <div className="flex min-h-[100dvh] flex-col">
@@ -243,21 +244,25 @@ export default function PartsPage() {
                         className="group relative rounded-lg border bg-card overflow-hidden transition-all hover:shadow-md"
                       >
                         <div className="aspect-square relative overflow-hidden bg-muted">
-                          {/* Placeholder image */}
-                          <Image
-                            src="../placeholder.svg"
-                            alt={product.name || "Auto Part"} // Usa el nombre del producto o un default
-                            fill
-                            className="object-contain p-4 transition-transform group-hover:scale-105"
-                          />
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute right-2 top-2 h-8 w-8 rounded-full bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <Heart className="h-4 w-4" />
-                            <span className="sr-only">Add to wishlist</span>
-                          </Button>
+                          {product.photo ? (
+                            <Image
+                              src={product.photo}
+                              alt={product.name || "Auto Part"}
+                              fill
+                              className="object-contain p-4 transition-transform group-hover:scale-105"
+                              unoptimized={process.env.NODE_ENV !== 'production'}
+                              onError={(e) => {
+                                // Fallback if image fails to load
+                                const target = e.target as HTMLImageElement;
+                                target.onerror = null;
+                                target.src = 'placeholder.svg';
+                              }}
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                              <span className="text-gray-400">No Image</span>
+                            </div>
+                          )}
                         </div>
                         <div className="p-4">
                           <h3 className="font-medium line-clamp-2 mb-1 group-hover:text-primary">
