@@ -18,7 +18,6 @@ import {
   ChevronRight,
 } from "lucide-react";
 import dynamic from "next/dynamic";
-import MapComponent from "@/components/MapComponent";
 
 export default function LandingPage() {
   return (
@@ -100,8 +99,22 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="relative hidden lg:block">
-                <MapComponent />
-              </div>
+  <Image
+    src="/images/HeaderMap.png?height=550&width=700"
+    width={700}
+    height={550}
+    alt="Map interface showing auto parts locations"
+    className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center darkened-image"
+  />
+  <div className="absolute inset-0 flex items-center justify-center">
+    <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded bg-primary hover:bg-primary/90">
+      <Link href="http://127.0.0.1:8000/map" target="_blank" rel="noopener noreferrer">
+    Try the Map
+  </Link>
+    </button>
+  </div>
+</div>
+
             </div>
           </div>
         </section>
