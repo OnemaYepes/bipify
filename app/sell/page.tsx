@@ -32,15 +32,22 @@ import {
   Truck,
   ShoppingCart,
   Star,
-  Plus, // This is the correct import from lucide-react
-  User, // This is the correct import from lucide-react
+  Plus,
+  User,
 } from "lucide-react"
 
 export default function SellPartPage() {
   const [step, setStep] = useState(1)
   const [images, setImages] = useState<string[]>([])
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [previewMode, setPreviewMode] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+  title: "Premium Ceramic Brake Pads for Toyota Camry",
+  price: 49.99,
+  description: "Lorem ipsum eratus est"
+});
 
   const totalSteps = 5
 
@@ -77,6 +84,7 @@ export default function SellPartPage() {
         const reader = new FileReader()
         reader.onloadend = () => {
           setImages((prevImages) => [...prevImages, reader.result as string])
+          setImageFiles((prevFiles) => [...prevFiles, file])
         }
         reader.readAsDataURL(file)
       } else if (!file.type.startsWith("image/")) {
@@ -92,6 +100,57 @@ export default function SellPartPage() {
     const newImages = [...images]
     newImages.splice(index, 1)
     setImages(newImages)
+
+    const newFiles = [...imageFiles]
+    newFiles.splice(index, 1)
+    setImageFiles(newFiles)
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const { id, value } = e.target;
+  setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const handleSubmit = async () => {
+    if (images.length === 0) {
+      alert("Upload at least one image");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const formDataToSend = new FormData()
+      formDataToSend.append("name", formData.title)
+      formDataToSend.append("price", formData.price)
+      formDataToSend.append("description", formData.description)
+
+      if (imageFiles.length > 0) {
+        formDataToSend.append("photo", imageFiles[0])
+      }
+
+      const response = await fetch("http://localhost:8000/api/products/add", {
+        method: "POST",
+        body: formDataToSend
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error, status: ${response.status}`)
+      }
+
+      const result = await response.json();
+      console.log("Success:", result);
+      alert("Product listed successfully");
+
+    } catch (error) {
+      console.log("Error submitting form: ", error);
+      alert("Failed to list product, list again");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -269,11 +328,12 @@ export default function SellPartPage() {
                       <div className="space-y-4">
                         <div className="grid grid-cols-1 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="title">Listing Title</Label>
+                            <Label htmlFor="title" id="title">Listing Title</Label>
                             <Input
                               id="title"
                               placeholder="e.g., 2018 Toyota Camry Brake Pads - New"
-                              defaultValue="Premium Ceramic Brake Pads for Toyota Camry"
+                              value={formData.title}
+                              onChange={handleInputChange}
                             />
                           </div>
                         </div>
@@ -366,7 +426,8 @@ export default function SellPartPage() {
                             id="description"
                             placeholder="Describe your part in detail, including any features, specifications, and condition notes."
                             className="min-h-[150px]"
-                            defaultValue="Premium ceramic brake pads designed for superior stopping power and reduced brake dust. These pads offer excellent performance in all weather conditions and come with a lifetime warranty. Includes all necessary hardware for installation."
+                            value={formData.description}
+                            onChange={handleInputChange}
                           />
                         </div>
 
@@ -632,7 +693,14 @@ export default function SellPartPage() {
                           <Label htmlFor="price">Price</Label>
                           <div className="relative">
                             <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input id="price" type="number" placeholder="0.00" className="pl-9" defaultValue="49.99" />
+                            <Input id="price"
+                              type="number"
+                              placeholder="0.00"
+                              className="pl-9"
+                              defaultValue="49.99" 
+                              value={formData.price}
+                              onChange={handleInputChange}
+                              />
                           </div>
                         </div>
 
@@ -880,10 +948,14 @@ export default function SellPartPage() {
                           <Eye className="mr-2 h-4 w-4" />
                           Preview
                         </Button>
-                        <Button>
-                          <Check className="mr-2 h-4 w-4" />
-                          Publish Listing
-                        </Button>
+                        <Button onClick={handleSubmit} disabled={isSubmitting}>
+                          {isSubmitting ? "Publishing..." : (
+                            <>
+                              <Check className="mr-2 h-4 w-4" />
+                              Publish Listing
+                            </>
+                          )}
+                          </Button>
                       </>
                     ) : (
                       <Button onClick={nextStep}>
@@ -1042,7 +1114,7 @@ function PreviewListing({ onBack, images }: { onBack: () => void; images: string
 
         <div className="p-6 border-t">
           <h2 className="text-xl font-bold mb-4">Description</h2>
-          <p className="mb-4">
+          <p className="mb-4" id="description">
             Premium ceramic brake pads designed for superior stopping power and reduced brake dust. These pads offer
             excellent performance in all weather conditions and come with a lifetime warranty. Includes all necessary
             hardware for installation.
